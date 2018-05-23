@@ -20,7 +20,8 @@ Het klassendiagram van je game.
 
 ## Pull request
 
-https://github.com/mitchellvervloet/theminimalist/tree/mitchellbranch
+Link naar de pull request:
+https://github.com/duncanteege/theminimalist/pull/1
 
 ## Peer review
 
