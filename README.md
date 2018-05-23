@@ -20,7 +20,7 @@ Het klassendiagram van je game.
 
 ## Pull request
 
-Link naar de pull request die je in week 4 hebt gedaan. De link gaat naar een PR in een fork van het project van een medestudent.
+https://github.com/mitchellvervloet/theminimalist/tree/mitchellbranch
 
 ## Peer review
 
