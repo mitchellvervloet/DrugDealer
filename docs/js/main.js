@@ -20,6 +20,7 @@ var GameObject = (function () {
         parent.appendChild(this.div);
     }
     GameObject.prototype.update = function () {
+        console.log('log');
         this.div.style.transform = "translate(" + this.x + "px, " + this.y + "px)";
     };
     return GameObject;
@@ -48,13 +49,16 @@ var Game = (function () {
         this.gameobjects = new Array();
         this.angriness = 0;
         this.score = 0;
+        this.minWidth = 0;
+        this.maxWidth = window.innerWidth;
+        this.maxHeight = window.innerHeight;
     }
     Game.prototype.init = function () {
         console.log("init game");
         this.ui = document.getElementsByTagName("ui")[0];
         var parent = document.getElementById("container");
         this.monkey = new Monkey(parent);
-        for (var p = 0; p < 5; p++) {
+        for (var p = 0; p < 1; p++) {
             this.gameobjects.push(new Guard(parent, this.monkey));
         }
         for (var b = 0; b < 5; b++) {
@@ -126,7 +130,7 @@ var Guard = (function (_super) {
     Guard.prototype.update = function () {
         var score = Game.getInstance().score;
         switch (true) {
-            case (score < 5):
+            case (score < 2):
                 if (Util.checkInRatio(this, this.monkey, 100)) {
                     this.behaviour = new Patrolling(this, this.monkey);
                 }
@@ -134,7 +138,7 @@ var Guard = (function (_super) {
                     this.behaviour = new Watching(this, this.monkey);
                 }
                 break;
-            case (score >= 5 && score < 10):
+            case (score >= 2 && score < 10):
                 if (Util.checkInRatio(this, this.monkey, 200)) {
                     this.behaviour = new Patrolling(this, this.monkey);
                 }
@@ -148,6 +152,12 @@ var Guard = (function (_super) {
                 break;
         }
         this.behaviour.performBehaviour();
+        if (this.x > (Game.getInstance().maxWidth - this.width)) {
+            this.xspeed *= -1;
+        }
+        if (this.y < 0 || this.y > (Game.getInstance().maxHeight - this.height)) {
+            this.yspeed *= -1;
+        }
         this.x += this.xspeed;
         this.y += this.yspeed;
         _super.prototype.update.call(this);

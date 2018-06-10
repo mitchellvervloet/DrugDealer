@@ -10,9 +10,18 @@ class Game {
     public angriness:number = 0
     public score:number = 0
 
+    public minWidth:number
+    public maxWidth:number
+    public maxHeight:number
+
     private ui:HTMLElement
 
     constructor () {
+
+        this.minWidth = 0
+        this.maxWidth = window.innerWidth
+        this.maxHeight = window.innerHeight
+
     }
 
     public init(){
@@ -24,7 +33,7 @@ class Game {
 
         this.monkey = new Monkey(parent)
 
-        for(let p = 0; p<5; p++){
+        for(let p = 0; p<1; p++){
             this.gameobjects.push(new Guard(parent, this.monkey))
         }
 

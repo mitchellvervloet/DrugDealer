@@ -29,7 +29,7 @@ guard {
     width: 20px;
 }
 
-guard::after {
+/* guard::after {
     display: block;
     content: '';
     border: 1px solid red;
@@ -39,7 +39,7 @@ guard::after {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-}
+} */
 
 banana {
     background-color: yellow;
@@ -51,7 +51,6 @@ banana {
 
 ui {
     font-size:42px;
-    text-shadow: 8px 8px 0px black;
     color:white;
     padding:20px;
     width:100%;

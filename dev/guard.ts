@@ -24,14 +24,14 @@ class Guard extends GameObject {
 
         let score = Game.getInstance().score
         switch(true) { 
-            case (score < 5):
+            case (score < 2):
                 if(Util.checkInRatio(this, this.monkey, 100)) {
                     this.behaviour = new Patrolling(this, this.monkey)
                 } else {
                     this.behaviour = new Watching(this, this.monkey)
                 }
                 break;
-            case (score >= 5 && score < 10): 
+            case (score >= 2 && score < 10): 
                 //statements;
                 if(Util.checkInRatio(this, this.monkey, 200)) {
                     this.behaviour = new Patrolling(this, this.monkey)
@@ -50,6 +50,15 @@ class Guard extends GameObject {
         } 
 
         this.behaviour.performBehaviour()
+
+        if (this.x > (Game.getInstance().maxWidth - this.width))
+        {
+            this.xspeed *= -1
+        }
+        if (this.y < 0 || this.y > (Game.getInstance().maxHeight - this.height))
+        {
+            this.yspeed *= -1
+        }
 
         // nu passen we de x en y positie aan met de snelheid
         this.x += this.xspeed;
