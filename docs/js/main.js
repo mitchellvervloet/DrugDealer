@@ -60,6 +60,7 @@ var Game = (function () {
         console.log("init game");
         window.addEventListener("keydown", function (e) { return _this.onKeyDown(e); });
         this.ui = document.getElementsByTagName("ui")[0];
+        this.pausedTextElement = document.querySelector('.pause');
         var parent = document.getElementById("container");
         this.monkey = new Monkey(parent);
         for (var p = 0; p < 1; p++) {
@@ -102,6 +103,7 @@ var Game = (function () {
     Game.prototype.gameLoop = function () {
         var _this = this;
         if (!this.paused) {
+            this.pausedTextElement.classList.remove('show');
             if (this.lives > 0) {
                 this.monkey.update();
                 for (var _i = 0, _a = this.gameobjects; _i < _a.length; _i++) {
@@ -121,9 +123,10 @@ var Game = (function () {
                     }
                 }
             }
-            else {
-                this.paused = true;
-            }
+        }
+        else {
+            this.paused = true;
+            this.pausedTextElement.classList.add('show');
         }
         requestAnimationFrame(function () { return _this.gameLoop(); });
     };

@@ -3,8 +3,6 @@ class Game {
     private static instance: Game
 
     private monkey: Monkey
-    // private policeBoats:Array<PoliceBoat> = new Array<PoliceBoat>()
-    // private bananas:Array<Banana> = new Array<Banana>()
     private gameobjects:Array<GameObject> = new Array<GameObject>()
 
     public angriness:number = 0
@@ -17,6 +15,7 @@ class Game {
     public maxHeight:number
 
     private ui:HTMLElement
+    private pausedTextElement:HTMLElement
 
     constructor () {
 
@@ -33,6 +32,7 @@ class Game {
         window.addEventListener("keydown", (e: KeyboardEvent) => this.onKeyDown(e))
 
         this.ui = document.getElementsByTagName("ui")[0];
+        this.pausedTextElement = document.querySelector('.pause')
 
         let parent = document.getElementById("container")!
 
@@ -91,6 +91,8 @@ class Game {
 
         if(!this.paused) {
 
+            this.pausedTextElement.classList.remove('show')
+
             if(this.lives > 0) {
 
                 this.monkey.update()
@@ -116,11 +118,12 @@ class Game {
                     
                 }
 
-            } else {
-
-                this.paused = true;
-
             }
+
+        } else {
+
+            this.paused = true;
+            this.pausedTextElement.classList.add('show')
 
         }
 
