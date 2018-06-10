@@ -16,7 +16,7 @@ class Guard extends GameObject {
         console.log("police created")
         this.monkey = monkey
 
-        this.behaviour = new Floating(this, this.monkey)
+        this.behaviour = new Watching(this, this.monkey)
 
     }
 
@@ -25,7 +25,7 @@ class Guard extends GameObject {
         switch(Game.getInstance().angriness) { 
             case 0: 
                 //statements;
-                this.behaviour = new Floating(this, this.monkey) 
+                this.behaviour = new Watching(this, this.monkey) 
                 break; 
             
             case 1: 
@@ -37,15 +37,15 @@ class Guard extends GameObject {
             
             case 2:
                 console.log('2 angry man')
-                this.behaviour = new Speeding(this, this.monkey) 
+                this.behaviour = new Shooting(this, this.monkey) 
                 break;
             
         } 
 
         this.behaviour.performBehaviour()
-        this.behaviour.onFloating()
+        this.behaviour.onWatching()
         this.behaviour.onPatrolling()
-        this.behaviour.onSpeeding()
+        this.behaviour.onShooting()
 
         // nu passen we de x en y positie aan met de snelheid
         this.x += this.xspeed;

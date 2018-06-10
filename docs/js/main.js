@@ -120,13 +120,13 @@ var Guard = (function (_super) {
         _this.y = Math.random() * (window.innerHeight / 2) + (window.innerHeight / 2 - _this.height);
         console.log("police created");
         _this.monkey = monkey;
-        _this.behaviour = new Floating(_this, _this.monkey);
+        _this.behaviour = new Watching(_this, _this.monkey);
         return _this;
     }
     Guard.prototype.update = function () {
         switch (Game.getInstance().angriness) {
             case 0:
-                this.behaviour = new Floating(this, this.monkey);
+                this.behaviour = new Watching(this, this.monkey);
                 break;
             case 1:
                 console.log('1 angry man');
@@ -134,13 +134,13 @@ var Guard = (function (_super) {
                 break;
             case 2:
                 console.log('2 angry man');
-                this.behaviour = new Speeding(this, this.monkey);
+                this.behaviour = new Shooting(this, this.monkey);
                 break;
         }
         this.behaviour.performBehaviour();
-        this.behaviour.onFloating();
+        this.behaviour.onWatching();
         this.behaviour.onPatrolling();
-        this.behaviour.onSpeeding();
+        this.behaviour.onShooting();
         this.x += this.xspeed;
         this.y += this.yspeed;
         _super.prototype.update.call(this);
