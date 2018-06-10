@@ -10,12 +10,15 @@ class Game {
     public angriness:number = 0
     public score:number = 0
 
+    private ui:HTMLElement
+
     constructor () {
     }
 
     public init(){
         console.log("init game")
 
+        this.ui = document.getElementsByTagName("ui")[0];
 
         let parent = document.getElementById("container")!
 
@@ -29,11 +32,18 @@ class Game {
             this.gameobjects.push(new Banana(parent))
         }
 
+
+
         // this.policeBoats.push(new PoliceBoat(parent))
 
         this.gameLoop()
 
         console.log('if')
+    }
+
+    public scorePoint() {
+        this.score ++
+        this.ui.innerHTML = "Score: " + this.score
     }
 
     public static getInstance() {
@@ -78,6 +88,7 @@ class Game {
                 if(Util.checkCollision(g, this.monkey) ){
                     hitBanana = true
                     g.resetBanana()
+                    this.scorePoint()
                 }
             }
             

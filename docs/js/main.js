@@ -51,6 +51,7 @@ var Game = (function () {
     }
     Game.prototype.init = function () {
         console.log("init game");
+        this.ui = document.getElementsByTagName("ui")[0];
         var parent = document.getElementById("container");
         this.monkey = new Monkey(parent);
         for (var p = 0; p < 5; p++) {
@@ -61,6 +62,10 @@ var Game = (function () {
         }
         this.gameLoop();
         console.log('if');
+    };
+    Game.prototype.scorePoint = function () {
+        this.score++;
+        this.ui.innerHTML = "Score: " + this.score;
     };
     Game.getInstance = function () {
         if (!Game.instance) {
@@ -88,6 +93,7 @@ var Game = (function () {
                 if (Util.checkCollision(g, this.monkey)) {
                     hitBanana = true;
                     g.resetBanana();
+                    this.scorePoint();
                 }
             }
         }
