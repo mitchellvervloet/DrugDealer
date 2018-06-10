@@ -63,7 +63,7 @@ var Game = (function () {
         this.pausedTextElement = document.querySelector('.pause');
         var parent = document.getElementById("container");
         this.monkey = new Monkey(parent);
-        for (var p = 0; p < 1; p++) {
+        for (var p = 0; p < 5; p++) {
             this.gameobjects.push(new Guard(parent, this.monkey));
         }
         for (var b = 0; b < 5; b++) {

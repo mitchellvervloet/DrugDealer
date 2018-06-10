@@ -38,7 +38,7 @@ class Game {
 
         this.monkey = new Monkey(parent)
 
-        for(let p = 0; p<1; p++){
+        for(let p = 0; p<5; p++){
             this.gameobjects.push(new Guard(parent, this.monkey))
         }
 
