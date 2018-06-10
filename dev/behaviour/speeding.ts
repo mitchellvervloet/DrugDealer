@@ -1,4 +1,4 @@
-class Speeding implements Behaviour {
+class onShooting implements Behaviour {
     monkey: Monkey
     self: Guard
  
@@ -11,7 +11,7 @@ class Speeding implements Behaviour {
         // console.log("speedin'")
     }
  
-    onFloating() {
+    onWatching() {
         //
     }
 
@@ -19,7 +19,7 @@ class Speeding implements Behaviour {
         //
     }
  
-    onSpeeding() {
+    onShooting() {
         //
         // deze regel code geeft de zombie de snelheid waarmee hij naar de kip beweegt
 

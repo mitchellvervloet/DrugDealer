@@ -11,7 +11,7 @@ class Patrolling implements Behaviour {
         // console.log("speedin'")
     }
  
-    onFloating() {
+    onWatching() {
         //
     }
 
@@ -19,7 +19,7 @@ class Patrolling implements Behaviour {
         //
     }
  
-    onSpeeding() {
+    onShooting() {
         //
     }
  }

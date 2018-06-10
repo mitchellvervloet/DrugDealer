@@ -231,27 +231,27 @@ var Util = (function () {
     };
     return Util;
 }());
-var Floating = (function () {
-    function Floating(policeBoat, drugsBoat) {
-        this.boat = drugsBoat;
-        this.self = policeBoat;
+var Watching = (function () {
+    function Watching(guard, monkey) {
+        this.monkey = monkey;
+        this.self = guard;
     }
-    Floating.prototype.performBehaviour = function () {
-        var xDistanceBetween = this.self.x - this.boat.x;
-        var yDistanceBetween = this.self.y - this.boat.y;
-        console.log(Util.checkInRatio(this.self, this.boat, 100));
-        if (Util.checkInRatio(this.self, this.boat, 100)) {
+    Watching.prototype.performBehaviour = function () {
+        var xDistanceBetween = this.self.x - this.monkey.x;
+        var yDistanceBetween = this.self.y - this.monkey.y;
+        console.log(Util.checkInRatio(this.self, this.monkey, 100));
+        if (Util.checkInRatio(this.self, this.monkey, 100)) {
             console.log('in ratio');
-            Util.setSpeed(this.self, this.boat.x - this.self.x, this.boat.y - this.self.y);
+            Util.setSpeed(this.self, this.monkey.x - this.self.x, this.monkey.y - this.self.y);
         }
     };
-    Floating.prototype.onFloating = function () {
+    Watching.prototype.onWatching = function () {
     };
-    Floating.prototype.onPatrolling = function () {
+    Watching.prototype.onPatrolling = function () {
     };
-    Floating.prototype.onSpeeding = function () {
+    Watching.prototype.onShooting = function () {
     };
-    return Floating;
+    return Watching;
 }());
 var Patrolling = (function () {
     function Patrolling(guard, monkey) {
@@ -260,26 +260,26 @@ var Patrolling = (function () {
     }
     Patrolling.prototype.performBehaviour = function () {
     };
-    Patrolling.prototype.onFloating = function () {
+    Patrolling.prototype.onWatching = function () {
     };
     Patrolling.prototype.onPatrolling = function () {
     };
-    Patrolling.prototype.onSpeeding = function () {
+    Patrolling.prototype.onShooting = function () {
     };
     return Patrolling;
 }());
-var Speeding = (function () {
-    function Speeding(guard, monkey) {
+var onShooting = (function () {
+    function onShooting(guard, monkey) {
         this.monkey = monkey;
         this.self = guard;
     }
-    Speeding.prototype.performBehaviour = function () {
+    onShooting.prototype.performBehaviour = function () {
     };
-    Speeding.prototype.onFloating = function () {
+    onShooting.prototype.onWatching = function () {
     };
-    Speeding.prototype.onPatrolling = function () {
+    onShooting.prototype.onPatrolling = function () {
     };
-    Speeding.prototype.onSpeeding = function () {
+    onShooting.prototype.onShooting = function () {
         var xDistanceBetween = this.monkey.x - this.self.x;
         var yDistanceBetween = this.monkey.y - this.self.y;
         console.log((xDistanceBetween < 50) || (xDistanceBetween > -50));
@@ -288,6 +288,6 @@ var Speeding = (function () {
             Util.setSpeed(this.self, this.monkey.x - this.self.x, this.monkey.y - this.self.y);
         }
     };
-    return Speeding;
+    return onShooting;
 }());
 //# sourceMappingURL=main.js.map
