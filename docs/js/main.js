@@ -120,8 +120,8 @@ var Guard = (function (_super) {
         var _this = _super.call(this, "guard", parent) || this;
         _this.width = 20;
         _this.height = 20;
-        _this.x = Math.random() * (window.innerWidth - _this.width);
-        _this.y = Math.random() * (window.innerHeight / 2) + (window.innerHeight / 2 - _this.height);
+        _this.x = Math.floor(Math.random() * (window.innerWidth - _this.width));
+        _this.y = Math.floor(Math.random() * (window.innerHeight / 2) + (window.innerHeight / 2 - _this.height));
         console.log("police created");
         _this.monkey = monkey;
         _this.behaviour = new Watching(_this, _this.monkey);
@@ -152,12 +152,6 @@ var Guard = (function (_super) {
                 break;
         }
         this.behaviour.performBehaviour();
-        if (this.x > (Game.getInstance().maxWidth - this.width)) {
-            this.xspeed *= -1;
-        }
-        if (this.y < 0 || this.y > (Game.getInstance().maxHeight - this.height)) {
-            this.yspeed *= -1;
-        }
         this.x += this.xspeed;
         this.y += this.yspeed;
         _super.prototype.update.call(this);
@@ -277,6 +271,12 @@ var Walking = (function () {
     Walking.prototype.performBehaviour = function () {
         this.self.xspeed = 1;
         this.self.yspeed = -1;
+        if (Math.floor(this.self.x) <= 0 || Math.floor(this.self.x) >= Math.floor(Game.getInstance().maxWidth - this.self.width)) {
+            this.self.xspeed *= -1;
+        }
+        if (Math.floor(this.self.y) <= 0 || Math.floor(this.self.y) >= Math.floor(Game.getInstance().maxHeight - this.self.height)) {
+            this.self.yspeed *= -1;
+        }
     };
     return Walking;
 }());

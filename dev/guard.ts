@@ -10,8 +10,8 @@ class Guard extends GameObject {
         super("guard", parent);
         this.width = 20;
         this.height = 20;
-        this.x = Math.random() * (window.innerWidth - this.width);
-        this.y = Math.random() * (window.innerHeight/2) + (window.innerHeight/2-this.height);
+        this.x = Math.floor(Math.random() * (window.innerWidth - this.width));
+        this.y = Math.floor(Math.random() * (window.innerHeight/2) + (window.innerHeight/2-this.height));
 
         console.log("police created")
         this.monkey = monkey
@@ -51,14 +51,14 @@ class Guard extends GameObject {
 
         this.behaviour.performBehaviour()
 
-        if (this.x > (Game.getInstance().maxWidth - this.width))
-        {
-            this.xspeed *= -1
-        }
-        if (this.y < 0 || this.y > (Game.getInstance().maxHeight - this.height))
-        {
-            this.yspeed *= -1
-        }
+        // if (this.x > (Game.getInstance().maxWidth - this.width))
+        // {
+        //     this.xspeed *= -1
+        // }
+        // if (this.y < 0 || this.y > (Game.getInstance().maxHeight - this.height))
+        // {
+        //     this.yspeed *= -1
+        // }
 
         // nu passen we de x en y positie aan met de snelheid
         this.x += this.xspeed;
