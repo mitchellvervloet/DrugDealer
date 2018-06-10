@@ -8,18 +8,9 @@ class Patrolling implements Behaviour {
     }
  
     performBehaviour() {
-        // console.log("speedin'")
-    }
- 
-    onWatching() {
-        //
-    }
+        console.log("patrolling")
+        Util.setSpeed(this.self, this.monkey.x - this.self.x, this.monkey.y - this.self.y);
 
-    onPatrolling() {
-        //
     }
  
-    onShooting() {
-        //
-    }
  }

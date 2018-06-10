@@ -22,30 +22,34 @@ class Guard extends GameObject {
 
     update() {
 
-        switch(Game.getInstance().angriness) { 
-            case 0: 
+        let score = Game.getInstance().score
+        switch(true) { 
+            case (score < 5):
+                if(Util.checkInRatio(this, this.monkey, 100)) {
+                    this.behaviour = new Patrolling(this, this.monkey)
+                } else {
+                    this.behaviour = new Watching(this, this.monkey)
+                }
+                break;
+            case (score >= 5 && score < 10): 
                 //statements;
-                this.behaviour = new Watching(this, this.monkey) 
+                if(Util.checkInRatio(this, this.monkey, 200)) {
+                    this.behaviour = new Patrolling(this, this.monkey)
+                } else {
+                    this.behaviour = new Walking(this, this.monkey)
+                }
                 break; 
             
-            case 1: 
+            case (score >= 10): 
                 //statements; 
                 console.log('1 angry man')
 
-                this.behaviour = new Patrolling(this, this.monkey) 
-                break; 
-            
-            case 2:
-                console.log('2 angry man')
                 this.behaviour = new Shooting(this, this.monkey) 
-                break;
+                break; 
             
         } 
 
         this.behaviour.performBehaviour()
-        this.behaviour.onWatching()
-        this.behaviour.onPatrolling()
-        this.behaviour.onShooting()
 
         // nu passen we de x en y positie aan met de snelheid
         this.x += this.xspeed;

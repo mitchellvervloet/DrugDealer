@@ -124,23 +124,30 @@ var Guard = (function (_super) {
         return _this;
     }
     Guard.prototype.update = function () {
-        switch (Game.getInstance().angriness) {
-            case 0:
-                this.behaviour = new Watching(this, this.monkey);
+        var score = Game.getInstance().score;
+        switch (true) {
+            case (score < 5):
+                if (Util.checkInRatio(this, this.monkey, 100)) {
+                    this.behaviour = new Patrolling(this, this.monkey);
+                }
+                else {
+                    this.behaviour = new Watching(this, this.monkey);
+                }
                 break;
-            case 1:
+            case (score >= 5 && score < 10):
+                if (Util.checkInRatio(this, this.monkey, 200)) {
+                    this.behaviour = new Patrolling(this, this.monkey);
+                }
+                else {
+                    this.behaviour = new Walking(this, this.monkey);
+                }
+                break;
+            case (score >= 10):
                 console.log('1 angry man');
-                this.behaviour = new Patrolling(this, this.monkey);
-                break;
-            case 2:
-                console.log('2 angry man');
                 this.behaviour = new Shooting(this, this.monkey);
                 break;
         }
         this.behaviour.performBehaviour();
-        this.behaviour.onWatching();
-        this.behaviour.onPatrolling();
-        this.behaviour.onShooting();
         this.x += this.xspeed;
         this.y += this.yspeed;
         _super.prototype.update.call(this);
@@ -237,12 +244,8 @@ var Patrolling = (function () {
         this.self = guard;
     }
     Patrolling.prototype.performBehaviour = function () {
-    };
-    Patrolling.prototype.onWatching = function () {
-    };
-    Patrolling.prototype.onPatrolling = function () {
-    };
-    Patrolling.prototype.onShooting = function () {
+        console.log("patrolling");
+        Util.setSpeed(this.self, this.monkey.x - this.self.x, this.monkey.y - this.self.y);
     };
     return Patrolling;
 }());
@@ -252,21 +255,20 @@ var Shooting = (function () {
         this.self = guard;
     }
     Shooting.prototype.performBehaviour = function () {
-    };
-    Shooting.prototype.onWatching = function () {
-    };
-    Shooting.prototype.onPatrolling = function () {
-    };
-    Shooting.prototype.onShooting = function () {
-        var xDistanceBetween = this.monkey.x - this.self.x;
-        var yDistanceBetween = this.monkey.y - this.self.y;
-        console.log((xDistanceBetween < 50) || (xDistanceBetween > -50));
-        if (((xDistanceBetween > 50) || (xDistanceBetween > -50) && (yDistanceBetween > 50) || (yDistanceBetween > -50))) {
-            console.log('in ratio');
-            Util.setSpeed(this.self, this.monkey.x - this.self.x, this.monkey.y - this.self.y);
-        }
+        console.log("shooting");
     };
     return Shooting;
+}());
+var Walking = (function () {
+    function Walking(guard, monkey) {
+        this.monkey = monkey;
+        this.self = guard;
+    }
+    Walking.prototype.performBehaviour = function () {
+        this.self.xspeed = 1;
+        this.self.yspeed = -1;
+    };
+    return Walking;
 }());
 var Watching = (function () {
     function Watching(guard, monkey) {
@@ -274,19 +276,9 @@ var Watching = (function () {
         this.self = guard;
     }
     Watching.prototype.performBehaviour = function () {
-        var xDistanceBetween = this.self.x - this.monkey.x;
-        var yDistanceBetween = this.self.y - this.monkey.y;
-        console.log(Util.checkInRatio(this.self, this.monkey, 100));
-        if (Util.checkInRatio(this.self, this.monkey, 100)) {
-            console.log('in ratio');
-            Util.setSpeed(this.self, this.monkey.x - this.self.x, this.monkey.y - this.self.y);
-        }
-    };
-    Watching.prototype.onWatching = function () {
-    };
-    Watching.prototype.onPatrolling = function () {
-    };
-    Watching.prototype.onShooting = function () {
+        console.log('watching');
+        this.self.xspeed = 0;
+        this.self.yspeed = 0;
     };
     return Watching;
 }());
