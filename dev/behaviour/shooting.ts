@@ -1,4 +1,4 @@
-class onShooting implements Behaviour {
+class Shooting implements Behaviour {
     monkey: Monkey
     self: Guard
  
