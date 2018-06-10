@@ -1,10 +1,10 @@
 class Patrolling implements Behaviour {
-    boat: DrugsBoat
-    self: PoliceBoat
+    monkey: Monkey
+    self: Guard
  
-    constructor(policeBoat: PoliceBoat, drugsBoat: DrugsBoat) {
-        this.boat = drugsBoat
-        this.self = policeBoat
+    constructor(guard: Guard, monkey: Monkey) {
+        this.monkey = monkey
+        this.self = guard
     }
  
     performBehaviour() {

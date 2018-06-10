@@ -1,10 +1,10 @@
 class Speeding implements Behaviour {
-    boat: DrugsBoat
-    self: PoliceBoat
+    monkey: Monkey
+    self: Guard
  
-    constructor(policeBoat: PoliceBoat, drugsBoat: DrugsBoat) {
-        this.boat = drugsBoat
-        this.self = policeBoat
+    constructor(guard: Guard, monkey: Monkey) {
+        this.monkey = monkey
+        this.self = guard
     }
  
     performBehaviour() {
@@ -23,14 +23,14 @@ class Speeding implements Behaviour {
         //
         // deze regel code geeft de zombie de snelheid waarmee hij naar de kip beweegt
 
-        let xDistanceBetween = this.boat.x - this.self.x
-        let yDistanceBetween = this.boat.y - this.self.y
+        let xDistanceBetween = this.monkey.x - this.self.x
+        let yDistanceBetween = this.monkey.y - this.self.y
 
         console.log((xDistanceBetween < 50) || (xDistanceBetween > -50) ) 
 
         if( ((xDistanceBetween > 50) || (xDistanceBetween > -50) && (yDistanceBetween > 50) || (yDistanceBetween > -50)) ) {
             console.log('in ratio')
-            Util.setSpeed(this.self, this.boat.x - this.self.x, this.boat.y - this.self.y);
+            Util.setSpeed(this.self, this.monkey.x - this.self.x, this.monkey.y - this.self.y);
         }
 
     }

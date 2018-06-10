@@ -18,22 +18,9 @@ class Guard extends GameObject {
 
         this.behaviour = new Floating(this, this.monkey)
 
-        // setTimeout(function(){
-        //     console.log("Angry: "+Game.instance.getAngriness())
-        // }, 1000)
-
-        // if (Game.getInstance().getAngriness()) {
-        //     console.log(Game.getInstance().getAngriness())
-        // }
-
     }
 
     update() {
-
-
-        // if (Game.instance) {
-
-        //     console.log(Game.instance.getAngriness())
 
         switch(Game.getInstance().angriness) { 
             case 0: 
@@ -54,8 +41,6 @@ class Guard extends GameObject {
                 break;
             
         } 
-
-        // }
 
         this.behaviour.performBehaviour()
         this.behaviour.onFloating()
