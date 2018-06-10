@@ -1,6 +1,8 @@
 interface Behaviour {
-    drugsBoat: DrugsBoat
+    boat: DrugsBoat
+    self: PoliceBoat
     performBehaviour():void
+    onFloating():void
     onPatrolling():void
     onSpeeding():void
 }

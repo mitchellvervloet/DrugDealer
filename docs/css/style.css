@@ -1,8 +1,50 @@
 body, html {
-    margin:0; padding:0;
-    width:100%; height:100%;
+    background-color: #70CF51;
+    overflow:hidden;
+    margin:0px; padding:0px;
 }
 
 * {
     box-sizing: border-box;
+}
+
+#container {
+    height: 100vh;
+    width: 100vw;
+}
+
+monkey {
+    background-color: red;
+    display: block;
+    height: 20px;
+    position: absolute;
+    width: 20px;
+}
+
+guard {
+    background-color: blue;
+    display: block;
+    height: 20px;
+    position: absolute;
+    width: 20px;
+}
+
+guard::after {
+    display: block;
+    content: '';
+    border: 1px solid red;
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+banana {
+    background-color: yellow;
+    display: block;
+    height: 20px;
+    position: absolute;
+    width: 20px;
 }

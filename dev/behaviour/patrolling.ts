@@ -1,19 +1,25 @@
 class Patrolling implements Behaviour {
-   public drugsBoat: DrugsBoat
+    boat: DrugsBoat
+    self: PoliceBoat
+ 
+    constructor(policeBoat: PoliceBoat, drugsBoat: DrugsBoat) {
+        this.boat = drugsBoat
+        this.self = policeBoat
+    }
+ 
+    performBehaviour() {
+        // console.log("speedin'")
+    }
+ 
+    onFloating() {
+        //
+    }
 
-   constructor(drugsBoat: DrugsBoat) {
-       this.drugsBoat = drugsBoat
-   }
-
-   performBehaviour() {
-       console.log("patrollin'")
-   }
-
-   onPatrolling() {
-       //
-   }
-
-   onSpeeding() {
-       //
-   }
-}
+    onPatrolling() {
+        //
+    }
+ 
+    onSpeeding() {
+        //
+    }
+ }
