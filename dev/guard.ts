@@ -33,9 +33,11 @@ class Guard extends GameObject {
                 break;
             case (score >= 2 && score < 10): 
                 //statements;
-                if(Util.checkInRatio(this, this.monkey, 200)) {
+                if(Util.checkInRatio(this, this.monkey, 200)) 
+                {
                     this.behaviour = new Patrolling(this, this.monkey)
-                } else {
+                } 
+                else {
                     this.behaviour = new Walking(this, this.monkey)
                 }
                 break; 

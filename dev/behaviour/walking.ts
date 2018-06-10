@@ -10,8 +10,15 @@ class Walking implements Behaviour {
 
     performBehaviour(): void {
 
-        this.self.xspeed = 1
-        this.self.yspeed = -1
+        if (this.self.xspeed === 0 || this.self.yspeed === 0) {
+            //random number between 0 and 1
+            this.self.xspeed = Math.floor(Math.random() * 2) -1
+            this.self.yspeed = Math.floor(Math.random() * 2) -1
+
+            //random generate minus or not
+            this.self.xspeed *= Math.floor(Math.random() * 2) == 1 ? 1 : -1
+            this.self.yspeed *= Math.floor(Math.random() * 2) == 1 ? 1 : -1
+        }
 
         if (Math.floor(this.self.x) <= 0 || Math.floor(this.self.x) >= Math.floor(Game.getInstance().maxWidth - this.self.width))
         {

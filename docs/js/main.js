@@ -306,8 +306,12 @@ var Walking = (function () {
         this.self = guard;
     }
     Walking.prototype.performBehaviour = function () {
-        this.self.xspeed = 1;
-        this.self.yspeed = -1;
+        if (this.self.xspeed === 0 || this.self.yspeed === 0) {
+            this.self.xspeed = Math.floor(Math.random() * 2) - 1;
+            this.self.yspeed = Math.floor(Math.random() * 2) - 1;
+            this.self.xspeed *= Math.floor(Math.random() * 2) == 1 ? 1 : -1;
+            this.self.yspeed *= Math.floor(Math.random() * 2) == 1 ? 1 : -1;
+        }
         if (Math.floor(this.self.x) <= 0 || Math.floor(this.self.x) >= Math.floor(Game.getInstance().maxWidth - this.self.width)) {
             this.self.xspeed *= -1;
         }
