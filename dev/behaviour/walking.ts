@@ -24,7 +24,4 @@ class Walking implements Behaviour {
 
     }
 
-
-
-
 }

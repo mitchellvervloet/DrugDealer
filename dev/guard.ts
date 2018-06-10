@@ -51,15 +51,6 @@ class Guard extends GameObject {
 
         this.behaviour.performBehaviour()
 
-        // if (this.x > (Game.getInstance().maxWidth - this.width))
-        // {
-        //     this.xspeed *= -1
-        // }
-        // if (this.y < 0 || this.y > (Game.getInstance().maxHeight - this.height))
-        // {
-        //     this.yspeed *= -1
-        // }
-
         // nu passen we de x en y positie aan met de snelheid
         this.x += this.xspeed;
         this.y += this.yspeed;

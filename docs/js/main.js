@@ -49,12 +49,16 @@ var Game = (function () {
         this.gameobjects = new Array();
         this.angriness = 0;
         this.score = 0;
+        this.paused = false;
+        this.lives = 3;
         this.minWidth = 0;
         this.maxWidth = window.innerWidth;
         this.maxHeight = window.innerHeight;
     }
     Game.prototype.init = function () {
+        var _this = this;
         console.log("init game");
+        window.addEventListener("keydown", function (e) { return _this.onKeyDown(e); });
         this.ui = document.getElementsByTagName("ui")[0];
         var parent = document.getElementById("container");
         this.monkey = new Monkey(parent);
@@ -64,8 +68,25 @@ var Game = (function () {
         for (var b = 0; b < 5; b++) {
             this.gameobjects.push(new Banana(parent));
         }
+        for (var t = 0; t < 8; t++) {
+            this.gameobjects.push(new Tree(parent));
+        }
         this.gameLoop();
         console.log('if');
+    };
+    Game.prototype.onKeyDown = function (event) {
+        switch (event.key) {
+            case "Escape":
+                if (this.paused) {
+                    this.paused = false;
+                }
+                else {
+                    this.paused = true;
+                }
+                break;
+            default:
+                break;
+        }
     };
     Game.prototype.scorePoint = function () {
         this.score++;
@@ -80,33 +101,31 @@ var Game = (function () {
     };
     Game.prototype.gameLoop = function () {
         var _this = this;
-        this.monkey.update();
-        var hitPolice = false;
-        var hitBanana = false;
-        for (var _i = 0, _a = this.gameobjects; _i < _a.length; _i++) {
-            var g = _a[_i];
-            g.update();
-            if (g instanceof Guard) {
-                if (Util.checkCollision(g, this.monkey)) {
-                    hitPolice = true;
-                    this.angriness++;
-                    this.monkey.resetPosition();
+        if (!this.paused) {
+            if (this.lives > 0) {
+                this.monkey.update();
+                for (var _i = 0, _a = this.gameobjects; _i < _a.length; _i++) {
+                    var g = _a[_i];
+                    g.update();
+                    if (g instanceof Guard) {
+                        if (Util.checkCollision(g, this.monkey)) {
+                            this.angriness++;
+                            this.monkey.resetPosition();
+                        }
+                    }
+                    if (g instanceof Banana) {
+                        if (Util.checkCollision(g, this.monkey)) {
+                            g.resetBanana();
+                            this.scorePoint();
+                        }
+                    }
                 }
             }
-            if (g instanceof Banana) {
-                if (Util.checkCollision(g, this.monkey)) {
-                    hitBanana = true;
-                    g.resetBanana();
-                    this.scorePoint();
-                }
+            else {
+                this.paused = true;
             }
         }
-        if (this.angriness < 3) {
-            requestAnimationFrame(function () { return _this.gameLoop(); });
-        }
-        else {
-            console.log('hit policeBoat');
-        }
+        requestAnimationFrame(function () { return _this.gameLoop(); });
     };
     return Game;
 }());
@@ -217,6 +236,21 @@ var Monkey = (function (_super) {
         _super.prototype.update.call(this);
     };
     return Monkey;
+}(GameObject));
+var Tree = (function (_super) {
+    __extends(Tree, _super);
+    function Tree(parent) {
+        var _this = _super.call(this, "tree", parent) || this;
+        _this.width = 75;
+        _this.height = 75;
+        _this.x = Math.random() * (window.innerWidth - _this.width);
+        _this.y = Math.random() * (window.innerHeight - _this.height);
+        return _this;
+    }
+    Tree.prototype.update = function () {
+        _super.prototype.update.call(this);
+    };
+    return Tree;
 }(GameObject));
 var Util = (function () {
     function Util() {

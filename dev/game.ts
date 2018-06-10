@@ -9,6 +9,8 @@ class Game {
 
     public angriness:number = 0
     public score:number = 0
+    public paused: boolean = false
+    public lives:number = 3
 
     public minWidth:number
     public maxWidth:number
@@ -22,10 +24,13 @@ class Game {
         this.maxWidth = window.innerWidth
         this.maxHeight = window.innerHeight
 
+
     }
 
     public init(){
         console.log("init game")
+
+        window.addEventListener("keydown", (e: KeyboardEvent) => this.onKeyDown(e))
 
         this.ui = document.getElementsByTagName("ui")[0];
 
@@ -41,18 +46,35 @@ class Game {
             this.gameobjects.push(new Banana(parent))
         }
 
-
-
-        // this.policeBoats.push(new PoliceBoat(parent))
+        for(let t = 0; t<8; t++){
+            this.gameobjects.push(new Tree(parent))
+        }
 
         this.gameLoop()
 
         console.log('if')
     }
 
+    public onKeyDown(event: KeyboardEvent): void {
+        switch (event.key) {
+            case "Escape":
+    
+                if (this.paused) {
+                    this.paused = false
+                } else {
+                    this.paused = true
+                }
+
+                break
+            default:
+                break
+        }
+    }
+
     public scorePoint() {
         this.score ++
         this.ui.innerHTML = "Score: " + this.score
+
     }
 
     public static getInstance() {
@@ -67,48 +89,42 @@ class Game {
     //Gameloop
     private gameLoop() {
 
-        this.monkey.update()
+        if(!this.paused) {
 
-        let hitPolice = false
-        let hitBanana = false
-        // for(let p of this.policeBoats){
-        //     p.update()
-        //     if(Util.checkCollision(p, this.drugsBoat) ){
-        //         hitPolice = true
-        //         this.angriness++
-        //         this.drugsBoat.resetPosition()
-        //     }
-        // }
+            if(this.lives > 0) {
 
-        for(let g of this.gameobjects){
-            g.update()
+                this.monkey.update()
+    
+                for(let g of this.gameobjects){
+                    g.update()
 
-            if(g instanceof Guard) {
+                    if(g instanceof Guard) {
 
-                if(Util.checkCollision(g, this.monkey) ){
-                    hitPolice = true
-                    this.angriness++
-                    this.monkey.resetPosition()
+                        if(Util.checkCollision(g, this.monkey) ){
+                            this.angriness++
+                            this.monkey.resetPosition()
+                        }
+
+                    }
+
+                    if(g instanceof Banana) {
+                        if(Util.checkCollision(g, this.monkey) ){
+                            g.resetBanana()
+                            this.scorePoint()
+                        }
+                    }
+                    
                 }
+
+            } else {
+
+                this.paused = true;
 
             }
 
-            if(g instanceof Banana) {
-                if(Util.checkCollision(g, this.monkey) ){
-                    hitBanana = true
-                    g.resetBanana()
-                    this.scorePoint()
-                }
-            }
-            
         }
 
-        // loop gaat door als we geen zombie raken 
-        if(this.angriness < 3) {
-            requestAnimationFrame(() => this.gameLoop())
-        } else {
-            console.log('hit policeBoat')
-        }
+        requestAnimationFrame(() => this.gameLoop())
 
     }
 

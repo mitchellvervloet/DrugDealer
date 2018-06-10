@@ -2,7 +2,6 @@
 
 class Monkey extends GameObject {
 
-    // public behaviour: Behaviour
     private speedLeft: number = 0
     private speedRight: number = 0
     private speedUp: number = 0
