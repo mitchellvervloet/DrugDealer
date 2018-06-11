@@ -26,16 +26,16 @@ class Monkey extends GameObject {
     onKeyDown(event: KeyboardEvent): void {
         switch (event.key) {
             case "ArrowLeft":
-                this.speedLeft = 1.5
+                this.speedLeft = 5.5
                 break
             case "ArrowRight":
-                this.speedRight = 1.5
+                this.speedRight = 5.5
                 break
             case "ArrowUp":
-                this.speedUp = 1.5
+                this.speedUp = 5.5
                 break
             case "ArrowDown":
-                this.speedDown = 1.5
+                this.speedDown = 5.5
                 break
 
         }
