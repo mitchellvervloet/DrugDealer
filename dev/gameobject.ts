@@ -15,7 +15,6 @@ class GameObject {
     }
 
     public update():void {
-        console.log('log')
         this.div.style.transform = "translate("+this.x+"px, "+this.y+"px)"
     }
 }

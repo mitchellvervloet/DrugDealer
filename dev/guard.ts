@@ -12,6 +12,7 @@ class Guard extends GameObject {
         this.height = 20;
         this.x = Math.floor(Math.random() * (window.innerWidth - this.width));
         this.y = Math.floor(Math.random() * (window.innerHeight/2) + (window.innerHeight/2-this.height));
+        this.speedmultiplier = 5
 
         console.log("police created")
         this.monkey = monkey
@@ -24,6 +25,9 @@ class Guard extends GameObject {
 
         let score = Game.getInstance().score
         switch(true) { 
+            case (Math.floor(this.monkey.x) <= 0 || Math.floor(this.monkey.x) >= Math.floor(Game.getInstance().maxWidth - this.monkey.width) || Math.floor(this.monkey.y) <= 0 || Math.floor(this.monkey.y) >= Math.floor(Game.getInstance().maxHeight - this.monkey.height)):
+                this.behaviour = new Walking(this, this.monkey)
+                break;
             case (score < 2):
                 if(Util.checkInRatio(this, this.monkey, 100)) {
                     this.behaviour = new Patrolling(this, this.monkey)
@@ -51,6 +55,15 @@ class Guard extends GameObject {
             
         } 
 
+        if (Math.floor(this.x) <= 0 || Math.floor(this.x) >= Math.floor(Game.getInstance().maxWidth - this.width))
+        {
+            this.xspeed *= -1
+        }
+        if (Math.floor(this.y) <= 0 || Math.floor(this.y) >= Math.floor(Game.getInstance().maxHeight - this.height))
+        {
+            this.yspeed *= -1
+        }
+
         this.behaviour.performBehaviour()
 
         // nu passen we de x en y positie aan met de snelheid
@@ -59,5 +72,10 @@ class Guard extends GameObject {
 
         super.update()
 
+    }
+
+    resetPosition() {
+        this.x = Math.floor(Math.random() * (window.innerWidth - this.width));
+        this.y = Math.floor(Math.random() * (window.innerHeight/2) + (window.innerHeight/2-this.height));
     }
 }

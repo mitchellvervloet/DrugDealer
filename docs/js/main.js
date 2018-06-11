@@ -20,7 +20,6 @@ var GameObject = (function () {
         parent.appendChild(this.div);
     }
     GameObject.prototype.update = function () {
-        console.log('log');
         this.div.style.transform = "translate(" + this.x + "px, " + this.y + "px)";
     };
     return GameObject;
@@ -51,13 +50,13 @@ var Game = (function () {
         this.score = 0;
         this.paused = false;
         this.lives = 3;
+        this.hitGuard = false;
         this.minWidth = 0;
         this.maxWidth = window.innerWidth;
         this.maxHeight = window.innerHeight;
     }
     Game.prototype.init = function () {
         var _this = this;
-        console.log("init game");
         window.addEventListener("keydown", function (e) { return _this.onKeyDown(e); });
         this.ui = document.getElementsByTagName("ui")[0];
         this.pausedTextElement = document.querySelector('.pause');
@@ -73,7 +72,6 @@ var Game = (function () {
             this.gameobjects.push(new Tree(parent));
         }
         this.gameLoop();
-        console.log('if');
     };
     Game.prototype.onKeyDown = function (event) {
         switch (event.key) {
@@ -105,6 +103,7 @@ var Game = (function () {
         if (!this.paused) {
             this.pausedTextElement.classList.remove('show');
             if (this.lives > 0) {
+                this.hitGuard = false;
                 this.monkey.update();
                 for (var _i = 0, _a = this.gameobjects; _i < _a.length; _i++) {
                     var g = _a[_i];
@@ -113,6 +112,10 @@ var Game = (function () {
                         if (Util.checkCollision(g, this.monkey)) {
                             this.angriness++;
                             this.monkey.resetPosition();
+                            this.hitGuard = true;
+                        }
+                        if (this.hitGuard) {
+                            g.resetPosition();
                         }
                     }
                     if (g instanceof Banana) {
@@ -144,6 +147,7 @@ var Guard = (function (_super) {
         _this.height = 20;
         _this.x = Math.floor(Math.random() * (window.innerWidth - _this.width));
         _this.y = Math.floor(Math.random() * (window.innerHeight / 2) + (window.innerHeight / 2 - _this.height));
+        _this.speedmultiplier = 5;
         console.log("police created");
         _this.monkey = monkey;
         _this.behaviour = new Watching(_this, _this.monkey);
@@ -152,6 +156,9 @@ var Guard = (function (_super) {
     Guard.prototype.update = function () {
         var score = Game.getInstance().score;
         switch (true) {
+            case (Math.floor(this.monkey.x) <= 0 || Math.floor(this.monkey.x) >= Math.floor(Game.getInstance().maxWidth - this.monkey.width) || Math.floor(this.monkey.y) <= 0 || Math.floor(this.monkey.y) >= Math.floor(Game.getInstance().maxHeight - this.monkey.height)):
+                this.behaviour = new Walking(this, this.monkey);
+                break;
             case (score < 2):
                 if (Util.checkInRatio(this, this.monkey, 100)) {
                     this.behaviour = new Patrolling(this, this.monkey);
@@ -173,10 +180,20 @@ var Guard = (function (_super) {
                 this.behaviour = new Shooting(this, this.monkey);
                 break;
         }
+        if (Math.floor(this.x) <= 0 || Math.floor(this.x) >= Math.floor(Game.getInstance().maxWidth - this.width)) {
+            this.xspeed *= -1;
+        }
+        if (Math.floor(this.y) <= 0 || Math.floor(this.y) >= Math.floor(Game.getInstance().maxHeight - this.height)) {
+            this.yspeed *= -1;
+        }
         this.behaviour.performBehaviour();
         this.x += this.xspeed;
         this.y += this.yspeed;
         _super.prototype.update.call(this);
+    };
+    Guard.prototype.resetPosition = function () {
+        this.x = Math.floor(Math.random() * (window.innerWidth - this.width));
+        this.y = Math.floor(Math.random() * (window.innerHeight / 2) + (window.innerHeight / 2 - this.height));
     };
     return Guard;
 }(GameObject));
@@ -311,12 +328,6 @@ var Walking = (function () {
             this.self.yspeed = Math.floor(Math.random() * 6) - 1;
             this.self.xspeed *= Math.floor(Math.random() * 2) == 1 ? 1 : -1;
             this.self.yspeed *= Math.floor(Math.random() * 2) == 1 ? 1 : -1;
-        }
-        if (Math.floor(this.self.x) <= 0 || Math.floor(this.self.x) >= Math.floor(Game.getInstance().maxWidth - this.self.width)) {
-            this.self.xspeed *= -5;
-        }
-        if (Math.floor(this.self.y) <= 0 || Math.floor(this.self.y) >= Math.floor(Game.getInstance().maxHeight - this.self.height)) {
-            this.self.yspeed *= -5;
         }
     };
     return Walking;

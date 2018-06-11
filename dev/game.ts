@@ -9,6 +9,7 @@ class Game {
     public score:number = 0
     public paused: boolean = false
     public lives:number = 3
+    public hitGuard: boolean = false
 
     public minWidth:number
     public maxWidth:number
@@ -27,32 +28,30 @@ class Game {
     }
 
     public init(){
-        console.log("init game")
 
         window.addEventListener("keydown", (e: KeyboardEvent) => this.onKeyDown(e))
 
-        this.ui = document.getElementsByTagName("ui")[0];
+        this.ui = document.getElementsByTagName("ui")[0]
         this.pausedTextElement = document.querySelector('.pause')
 
         let parent = document.getElementById("container")!
 
         this.monkey = new Monkey(parent)
 
-        for(let p = 0; p<5; p++){
+        for(let p = 0; p<5; p++) {
             this.gameobjects.push(new Guard(parent, this.monkey))
         }
 
-        for(let b = 0; b<5; b++){
+        for(let b = 0; b<5; b++) {
             this.gameobjects.push(new Banana(parent))
         }
 
-        for(let t = 0; t<8; t++){
+        for(let t = 0; t<8; t++) { 
             this.gameobjects.push(new Tree(parent))
         }
 
         this.gameLoop()
 
-        console.log('if')
     }
 
     public onKeyDown(event: KeyboardEvent): void {
@@ -95,6 +94,8 @@ class Game {
 
             if(this.lives > 0) {
 
+                this.hitGuard = false
+
                 this.monkey.update()
     
                 for(let g of this.gameobjects){
@@ -105,6 +106,11 @@ class Game {
                         if(Util.checkCollision(g, this.monkey) ){
                             this.angriness++
                             this.monkey.resetPosition()
+                            this.hitGuard = true
+                        }
+
+                        if(this.hitGuard) {
+                            g.resetPosition()
                         }
 
                     }
