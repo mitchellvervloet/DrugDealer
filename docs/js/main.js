@@ -156,16 +156,16 @@ var Guard = (function (_super) {
     Guard.prototype.update = function () {
         var score = Game.getInstance().score;
         switch (true) {
-            case (Math.floor(this.monkey.x) <= 0 || Math.floor(this.monkey.x) >= Math.floor(Game.getInstance().maxWidth - this.monkey.width) || Math.floor(this.monkey.y) <= 0 || Math.floor(this.monkey.y) >= Math.floor(Game.getInstance().maxHeight - this.monkey.height)):
-                this.behaviour = new Walking(this, this.monkey);
-                break;
             case (score < 2):
-                if (Util.checkInRatio(this, this.monkey, 100)) {
+                if (Util.checkInRatio(this, this.monkey, 200)) {
                     this.behaviour = new Patrolling(this, this.monkey);
                 }
                 else {
                     this.behaviour = new Watching(this, this.monkey);
                 }
+                break;
+            case (Math.floor(this.monkey.x) <= 0 || Math.floor(this.monkey.x) >= Math.floor(Game.getInstance().maxWidth - this.monkey.width) || Math.floor(this.monkey.y) <= 0 || Math.floor(this.monkey.y) >= Math.floor(Game.getInstance().maxHeight - this.monkey.height)):
+                this.behaviour = new Walking(this, this.monkey);
                 break;
             case (score >= 2 && score < 10):
                 if (Util.checkInRatio(this, this.monkey, 200)) {
