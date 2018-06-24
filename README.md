@@ -7,7 +7,7 @@ Deze game is een game waarbij de gebruiker met zijn pijltjestoetsen de aap moet 
 
 ## Speelbare game
 
-Link naar de online speelbare game
+Link naar de online speelbare game: https://mitchellvervloet.github.io/DrugDealer/
 
 ## Installatie
 
