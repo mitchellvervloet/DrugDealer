@@ -263,4 +263,5 @@ class Sound {
 ```
 
 ### Game component 2
+nvt helaas
 
