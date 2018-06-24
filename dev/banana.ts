@@ -12,20 +12,17 @@ class Banana extends SpecialItems {
 
     }
 
+    //If collided with monkey then this happens
     collided() {
-
         Game.getInstance().score++
         Game.getInstance().relScore++
         Game.getInstance().uiScore.innerHTML = "Score: " + Game.getInstance().score
         Game.getInstance().nomnomnomSound.play()
         super.reset()
-
     }
 
     update() {
-
         super.update();
-
     }
 
 }

@@ -26,6 +26,7 @@ class Game {
     public uiScore:HTMLElement
     public uiLives:HTMLElement
     private pausedTextElement:HTMLElement
+    private dead:boolean = false
 
     //loop
     private animation_id;
@@ -64,8 +65,16 @@ class Game {
             this.specialitems.push(new PotionScoreDown(parent))
         }
 
+        let newGame = document.querySelector(".restart");
+        newGame.addEventListener("click", () => this.newGame())
+
         this.gameLoop()
 
+    }
+
+    //Reload page if clicked on start new game button on dead screen
+    public newGame() {
+        location.reload()
     }
 
     //Pause method for pausing game with esc button
@@ -104,7 +113,6 @@ class Game {
     public static getInstance() {
 
         if (!Game.instance) {
-            console.log("Not yet there!!")
             Game.instance = new Game()
         }
         return Game.instance
@@ -172,6 +180,15 @@ class Game {
                     }
                 }
 
+            } else {
+
+                this.dead = true
+                let gameoverContainer = document.querySelector('.gameover')
+                let deadScore = document.querySelector('.gameover .title-s')
+
+                gameoverContainer.classList.add('show')
+                deadScore.innerHTML = "Your score is: " + this.score
+
             }
 
         } else {
@@ -187,6 +204,5 @@ class Game {
 }
 
 window.addEventListener('load', () => {
-    console.log('loaded')
     Game.getInstance().init()
 })

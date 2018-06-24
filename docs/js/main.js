@@ -77,6 +77,7 @@ var Game = (function () {
         this.lives = 3;
         this.hitGuard = false;
         this.touchTree = false;
+        this.dead = false;
         this.nomnomnomSound = new Sound('sounds/nomnomnom.wav');
         this.loseLiveSound = new Sound('sounds/loselive.wav');
         this.blehSound = new Sound('sounds/bleh.mp3');
@@ -102,7 +103,12 @@ var Game = (function () {
         for (var p = 0; p < 3; p++) {
             this.specialitems.push(new PotionScoreDown(parent));
         }
+        var newGame = document.querySelector(".restart");
+        newGame.addEventListener("click", function () { return _this.newGame(); });
         this.gameLoop();
+    };
+    Game.prototype.newGame = function () {
+        location.reload();
     };
     Game.prototype.onKeyDown = function (event) {
         switch (event.key) {
@@ -131,7 +137,6 @@ var Game = (function () {
     };
     Game.getInstance = function () {
         if (!Game.instance) {
-            console.log("Not yet there!!");
             Game.instance = new Game();
         }
         return Game.instance;
@@ -177,6 +182,13 @@ var Game = (function () {
                     }
                 }
             }
+            else {
+                this.dead = true;
+                var gameoverContainer = document.querySelector('.gameover');
+                var deadScore = document.querySelector('.gameover .title-s');
+                gameoverContainer.classList.add('show');
+                deadScore.innerHTML = "Your score is: " + this.score;
+            }
         }
         else {
             this.paused = true;
@@ -186,7 +198,6 @@ var Game = (function () {
     return Game;
 }());
 window.addEventListener('load', function () {
-    console.log('loaded');
     Game.getInstance().init();
 });
 var Guard = (function (_super) {
