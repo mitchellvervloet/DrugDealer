@@ -1,4 +1,4 @@
-# DrugDealer - Mitchell Vervloet
+# MonkeyChase - Mitchell Vervloet (naam was eerst DrugDealer)
 Deze game is ontwikkeld voor de herkansing van het vak Applying Design Patterns in Game Development.
 @Copyright - Mitchell Vervloet
 
