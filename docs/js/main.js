@@ -65,11 +65,11 @@ var Game = (function () {
         for (var p = 0; p < 5; p++) {
             this.gameobjects.push(new Guard(parent, this.monkey));
         }
-        for (var b = 0; b < 5; b++) {
-            this.gameobjects.push(new Banana(parent));
-        }
         for (var t = 0; t < 8; t++) {
             this.gameobjects.push(new Tree(parent));
+        }
+        for (var b = 0; b < 5; b++) {
+            this.gameobjects.push(new Banana(parent));
         }
         this.gameLoop();
     };
@@ -100,6 +100,7 @@ var Game = (function () {
     };
     Game.prototype.gameLoop = function () {
         var _this = this;
+        this.animation_id = requestAnimationFrame(function () { return _this.gameLoop(); });
         if (!this.paused) {
             this.pausedTextElement.classList.remove('show');
             if (this.lives > 0) {
@@ -113,6 +114,11 @@ var Game = (function () {
                             this.angriness++;
                             this.monkey.resetPosition();
                             this.hitGuard = true;
+                            this.lives--;
+                            cancelAnimationFrame(this.animation_id);
+                            setTimeout(function () {
+                                requestAnimationFrame(function () { return _this.gameLoop(); });
+                            }, 500);
                         }
                         if (this.hitGuard) {
                             g.resetPosition();
@@ -131,7 +137,6 @@ var Game = (function () {
             this.paused = true;
             this.pausedTextElement.classList.add('show');
         }
-        requestAnimationFrame(function () { return _this.gameLoop(); });
     };
     return Game;
 }());
@@ -143,8 +148,8 @@ var Guard = (function (_super) {
     __extends(Guard, _super);
     function Guard(parent, monkey) {
         var _this = _super.call(this, "guard", parent) || this;
-        _this.width = 20;
-        _this.height = 20;
+        _this.width = 25;
+        _this.height = 42;
         _this.x = Math.floor(Math.random() * (window.innerWidth - _this.width));
         _this.y = Math.floor(Math.random() * (window.innerHeight / 2) + (window.innerHeight / 2 - _this.height));
         _this.speedmultiplier = 5;
@@ -187,6 +192,38 @@ var Guard = (function (_super) {
             this.yspeed *= -1;
         }
         this.behaviour.performBehaviour();
+        switch (true) {
+            case (this.xspeed > 0):
+                this.width = 16;
+                this.div.style.width = "16px";
+                this.div.style.backgroundPosition = "-139px 0";
+                if (this.yspeed > 0) {
+                    this.width = 21;
+                    this.div.style.width = "21px";
+                    this.div.style.backgroundPosition = "-157px 0";
+                }
+                else if (this.yspeed < 0) {
+                    this.width = 21;
+                    this.div.style.width = "21px";
+                    this.div.style.backgroundPosition = "-115px 0";
+                }
+                break;
+            case (this.xspeed < 0):
+                this.width = 16;
+                this.div.style.width = "16px";
+                this.div.style.backgroundPosition = "-49px 0";
+                if (this.yspeed > 0) {
+                    this.width = 21;
+                    this.div.style.width = "21px";
+                    this.div.style.backgroundPosition = "-26px 0";
+                }
+                else if (this.yspeed < 0) {
+                    this.width = 21;
+                    this.div.style.width = "21px";
+                    this.div.style.backgroundPosition = "-67px 0";
+                }
+                break;
+        }
         this.x += this.xspeed;
         this.y += this.yspeed;
         _super.prototype.update.call(this);
@@ -205,8 +242,8 @@ var Monkey = (function (_super) {
         _this.speedRight = 0;
         _this.speedUp = 0;
         _this.speedDown = 0;
-        _this.width = 20;
-        _this.height = 20;
+        _this.width = 25;
+        _this.height = 40;
         _this.x = 20;
         _this.y = 20;
         console.log("boat created");
@@ -216,33 +253,33 @@ var Monkey = (function (_super) {
     }
     Monkey.prototype.onKeyDown = function (event) {
         switch (event.key) {
-            case "ArrowLeft":
-                this.speedLeft = 5.5;
-                break;
-            case "ArrowRight":
-                this.speedRight = 5.5;
-                break;
             case "ArrowUp":
                 this.speedUp = 5.5;
                 break;
             case "ArrowDown":
                 this.speedDown = 5.5;
                 break;
+            case "ArrowLeft":
+                this.speedLeft = 5.5;
+                break;
+            case "ArrowRight":
+                this.speedRight = 5.5;
+                break;
         }
     };
     Monkey.prototype.onKeyUp = function (event) {
         switch (event.key) {
-            case "ArrowLeft":
-                this.speedLeft = 0;
-                break;
-            case "ArrowRight":
-                this.speedRight = 0;
-                break;
             case "ArrowUp":
                 this.speedUp = 0;
                 break;
             case "ArrowDown":
                 this.speedDown = 0;
+                break;
+            case "ArrowLeft":
+                this.speedLeft = 0;
+                break;
+            case "ArrowRight":
+                this.speedRight = 0;
                 break;
         }
     };
@@ -251,6 +288,46 @@ var Monkey = (function (_super) {
         this.y = 20;
     };
     Monkey.prototype.update = function () {
+        switch (true) {
+            case (this.x < 0):
+                this.x = window.innerWidth;
+                break;
+            case (this.x > window.innerWidth):
+                this.x = 0;
+                break;
+            case (this.y > window.innerHeight):
+                this.y = 0;
+                break;
+            case (this.y < 0):
+                this.y = window.innerHeight;
+                break;
+        }
+        switch (true) {
+            case (this.speedLeft > 0):
+                this.width = 34;
+                this.div.style.width = "34px";
+                this.div.style.backgroundPosition = "0 -56px";
+                break;
+            case (this.speedRight > 0):
+                this.width = 34;
+                this.div.style.width = "34px";
+                this.div.style.backgroundPosition = "0 -104px";
+                break;
+            case (this.speedDown > 0):
+                this.width = 25;
+                this.height = 40;
+                this.div.style.width = "25px";
+                this.div.style.height = "40px";
+                this.div.style.backgroundPosition = "-4px 0";
+                break;
+            case (this.speedUp > 0):
+                this.width = 25;
+                this.height = 30;
+                this.div.style.width = "25px";
+                this.div.style.height = "30px";
+                this.div.style.backgroundPosition = "-4px -154px";
+                break;
+        }
         this.x = this.x + this.speedRight - this.speedLeft;
         this.y = this.y + this.speedDown - this.speedUp;
         _super.prototype.update.call(this);

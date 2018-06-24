@@ -18,6 +18,8 @@ class Game {
     private ui:HTMLElement
     private pausedTextElement:HTMLElement
 
+    private animation_id;
+
     constructor () {
 
         this.minWidth = 0
@@ -42,12 +44,12 @@ class Game {
             this.gameobjects.push(new Guard(parent, this.monkey))
         }
 
-        for(let b = 0; b<5; b++) {
-            this.gameobjects.push(new Banana(parent))
-        }
-
         for(let t = 0; t<8; t++) { 
             this.gameobjects.push(new Tree(parent))
+        }
+
+        for(let b = 0; b<5; b++) {
+            this.gameobjects.push(new Banana(parent))
         }
 
         this.gameLoop()
@@ -88,6 +90,8 @@ class Game {
     //Gameloop
     private gameLoop() {
 
+        this.animation_id = requestAnimationFrame(() => this.gameLoop())
+
         if(!this.paused) {
 
             this.pausedTextElement.classList.remove('show')
@@ -107,6 +111,14 @@ class Game {
                             this.angriness++
                             this.monkey.resetPosition()
                             this.hitGuard = true
+                            this.lives--
+
+                            cancelAnimationFrame(this.animation_id)
+
+                            setTimeout(() => {
+                                requestAnimationFrame(() => this.gameLoop())
+                            }, 500)
+
                         }
 
                         if(this.hitGuard) {
@@ -132,8 +144,6 @@ class Game {
             this.pausedTextElement.classList.add('show')
 
         }
-
-        requestAnimationFrame(() => this.gameLoop())
 
     }
 

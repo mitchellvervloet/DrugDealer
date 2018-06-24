@@ -8,8 +8,8 @@ class Guard extends GameObject {
     constructor(parent: HTMLElement, monkey:Monkey) {
 
         super("guard", parent);
-        this.width = 20;
-        this.height = 20;
+        this.width = 25;
+        this.height = 42;
         this.x = Math.floor(Math.random() * (window.innerWidth - this.width));
         this.y = Math.floor(Math.random() * (window.innerHeight/2) + (window.innerHeight/2-this.height));
         this.speedmultiplier = 5
@@ -65,6 +65,41 @@ class Guard extends GameObject {
         }
 
         this.behaviour.performBehaviour()
+
+        switch(true) {
+            case (this.xspeed > 0):
+                this.width = 16;
+                this.div.style.width = "16px"
+                this.div.style.backgroundPosition = "-139px 0"
+
+                if (this.yspeed > 0) {
+                    this.width = 21;
+                    this.div.style.width = "21px"
+                    this.div.style.backgroundPosition = "-157px 0"
+                } else if (this.yspeed < 0) {
+                    this.width = 21;
+                    this.div.style.width = "21px"
+                    this.div.style.backgroundPosition = "-115px 0"
+                }
+
+                break;
+            case (this.xspeed < 0):
+                this.width = 16;
+                this.div.style.width = "16px"
+                this.div.style.backgroundPosition = "-49px 0"
+                
+                if (this.yspeed > 0) {
+                    this.width = 21;
+                    this.div.style.width = "21px"
+                    this.div.style.backgroundPosition = "-26px 0"
+                } else if (this.yspeed < 0) {
+                    this.width = 21;
+                    this.div.style.width = "21px"
+                    this.div.style.backgroundPosition = "-67px 0"
+                }
+
+                break;
+        }
 
         // nu passen we de x en y positie aan met de snelheid
         this.x += this.xspeed;
