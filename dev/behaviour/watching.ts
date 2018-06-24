@@ -7,17 +7,11 @@ class Watching implements Behaviour {
         this.self = guard
     }
  
+    //just looking around
     performBehaviour() {
-
-        console.log('watching')
 
         this.self.xspeed = 0
         this.self.yspeed = 0
-
-        // if(Util.checkInRatio(this.self, this.monkey, 100)) {
-        //     console.log('in ratio')
-        //     Util.setSpeed(this.self, this.monkey.x - this.self.x, this.monkey.y - this.self.y);
-        // } 
 
     }
  

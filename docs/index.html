@@ -5,13 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="./css/style.css">
-    <title>Typescript</title>
+    <title>Monkey chase</title>
 </head>
 <body>
 
+    <div class="gameover">
+        <div class="content">
+                <span class="title-xl">You died!</span><br/>
+                <span class="title-s">Your score is:</span><br/>
+                <button class="restart">New Game</button>
+        </div>
+    </div>
+
     <div id="container">
-            <ui>Score: 0</ui>
-            <ui class="pause">paused</ui>
+            <div class="ui">
+                    <ui class="score">Score: 0</ui><br/>
+                    <ui class="lives">lives: 3</ui> 
+            </div>
+            <ui class="pause">paused, click on 'esc' to unpause</ui>
 
     </div>
 

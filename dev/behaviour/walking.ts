@@ -6,8 +6,10 @@ class Walking implements Behaviour {
     constructor(guard: Guard, monkey: Monkey) {
         this.monkey = monkey
         this.self = guard
+        this.self.speedmultiplier = 5
     }
 
+    //walking around
     performBehaviour(): void {
 
         if (this.self.xspeed === 0 || this.self.yspeed === 0) {

@@ -1,6 +1,8 @@
 /// <reference path="gameobject.ts"/>
 
-class Monkey extends GameObject {
+class Monkey extends GameObject implements Subject {
+
+    public observers: Observer[] = [];
 
     private speedLeft: number = 0
     private speedRight: number = 0
@@ -15,14 +17,32 @@ class Monkey extends GameObject {
         this.x = 20
         this.y = 20
 
-        console.log("boat created")
-        // this.behaviour = new Patrolling(this)
-
         window.addEventListener("keydown", (e: KeyboardEvent) => this.onKeyDown(e))
         window.addEventListener("keyup", (e: KeyboardEvent) => this.onKeyUp(e))
 
     }
 
+    //OBSERVER --> Subscribe method so subscribers can get notified
+    subscribe(o: Observer): void {
+        this.observers.push(o)
+    }
+
+    //OBSERVER --> Unsubscribe method so subscribers can get of the list of subscribers
+    unsubscribe(o: Observer): void {
+        let indexOfO = this.observers.indexOf(o)
+        if (indexOfO > -1) {
+            this.observers.splice(indexOfO, 1);
+        }
+    }
+
+    //send message mthod to notify all subscribers
+    public sendMessage() {
+        for (let c of this.observers) {
+            c.notify()
+        }
+    }
+
+    //movement
     onKeyDown(event: KeyboardEvent): void {
         switch (event.key) {
             case "ArrowUp":
@@ -40,6 +60,7 @@ class Monkey extends GameObject {
         }
     }
 
+    //movement
     onKeyUp(event: KeyboardEvent): void {
         switch (event.key) {
             case "ArrowUp":
@@ -57,6 +78,7 @@ class Monkey extends GameObject {
         }
     }
 
+    //reset method for position
     resetPosition() {
         this.x = 20
         this.y = 20
@@ -64,8 +86,7 @@ class Monkey extends GameObject {
 
     update() {
 
-        // this.behaviour.performBehaviour()
-
+        //To know if monkey is out of screen and draw it on the other side
         switch(true) {
             case (this.x < 0):
                 this.x = window.innerWidth
@@ -81,6 +102,7 @@ class Monkey extends GameObject {
                 break;
         }
 
+        //change sprite for direction
         switch(true) {
             case (this.speedLeft > 0):
                 this.width = 34;

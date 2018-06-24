@@ -24,33 +24,62 @@ var GameObject = (function () {
     };
     return GameObject;
 }());
+var SpecialItems = (function (_super) {
+    __extends(SpecialItems, _super);
+    function SpecialItems(element, parent) {
+        return _super.call(this, element, parent) || this;
+    }
+    SpecialItems.prototype.reset = function () {
+        this.x = Math.random() * (window.innerWidth - this.width);
+        this.y = Math.random() * (window.innerHeight - this.height);
+    };
+    SpecialItems.prototype.collided = function () {
+        this.reset();
+    };
+    SpecialItems.prototype.update = function () {
+        if (Util.checkCollision(this, Game.getInstance().monkey)) {
+            this.collided();
+        }
+        _super.prototype.update.call(this);
+    };
+    return SpecialItems;
+}(GameObject));
 var Banana = (function (_super) {
     __extends(Banana, _super);
     function Banana(parent) {
         var _this = _super.call(this, "banana", parent) || this;
-        _this.width = 20;
-        _this.height = 20;
+        _this.width = 15;
+        _this.height = 15;
         _this.x = Math.random() * (window.innerWidth - _this.width);
         _this.y = Math.random() * (window.innerHeight - _this.height);
         return _this;
     }
-    Banana.prototype.resetBanana = function () {
-        this.x = Math.random() * (window.innerWidth - this.width);
-        this.y = Math.random() * (window.innerHeight - this.height);
+    Banana.prototype.collided = function () {
+        Game.getInstance().score++;
+        Game.getInstance().relScore++;
+        Game.getInstance().uiScore.innerHTML = "Score: " + Game.getInstance().score;
+        Game.getInstance().nomnomnomSound.play();
+        _super.prototype.reset.call(this);
     };
     Banana.prototype.update = function () {
         _super.prototype.update.call(this);
     };
     return Banana;
-}(GameObject));
+}(SpecialItems));
 var Game = (function () {
     function Game() {
         this.gameobjects = new Array();
+        this.specialitems = new Array();
         this.angriness = 0;
         this.score = 0;
+        this.relScore = 0;
         this.paused = false;
         this.lives = 3;
         this.hitGuard = false;
+        this.touchTree = false;
+        this.nomnomnomSound = new Sound('sounds/nomnomnom.wav');
+        this.loseLiveSound = new Sound('sounds/loselive.wav');
+        this.blehSound = new Sound('sounds/bleh.mp3');
         this.minWidth = 0;
         this.maxWidth = window.innerWidth;
         this.maxHeight = window.innerHeight;
@@ -58,18 +87,20 @@ var Game = (function () {
     Game.prototype.init = function () {
         var _this = this;
         window.addEventListener("keydown", function (e) { return _this.onKeyDown(e); });
-        this.ui = document.getElementsByTagName("ui")[0];
+        this.uiScore = document.querySelector(".score");
+        this.uiLives = document.querySelector(".lives");
         this.pausedTextElement = document.querySelector('.pause');
         var parent = document.getElementById("container");
         this.monkey = new Monkey(parent);
-        for (var p = 0; p < 5; p++) {
+        for (var g = 0; g < 5; g++) {
             this.gameobjects.push(new Guard(parent, this.monkey));
         }
-        for (var t = 0; t < 8; t++) {
-            this.gameobjects.push(new Tree(parent));
-        }
+        this.gameobjects.push(new Tree(parent));
         for (var b = 0; b < 5; b++) {
-            this.gameobjects.push(new Banana(parent));
+            this.specialitems.push(new Banana(parent));
+        }
+        for (var p = 0; p < 3; p++) {
+            this.specialitems.push(new PotionScoreDown(parent));
         }
         this.gameLoop();
     };
@@ -89,7 +120,14 @@ var Game = (function () {
     };
     Game.prototype.scorePoint = function () {
         this.score++;
-        this.ui.innerHTML = "Score: " + this.score;
+        this.relScore++;
+        this.uiScore.innerHTML = "Score: " + this.score;
+        this.nomnomnomSound.play();
+    };
+    Game.prototype.loseLive = function () {
+        this.lives--;
+        this.uiLives.innerHTML = "Lives: " + this.lives;
+        this.loseLiveSound.play();
     };
     Game.getInstance = function () {
         if (!Game.instance) {
@@ -111,23 +149,30 @@ var Game = (function () {
                     g.update();
                     if (g instanceof Guard) {
                         if (Util.checkCollision(g, this.monkey)) {
-                            this.angriness++;
                             this.monkey.resetPosition();
                             this.hitGuard = true;
-                            this.lives--;
+                            this.loseLive();
                             cancelAnimationFrame(this.animation_id);
                             setTimeout(function () {
                                 requestAnimationFrame(function () { return _this.gameLoop(); });
                             }, 500);
                         }
-                        if (this.hitGuard) {
-                            g.resetPosition();
+                    }
+                    if (g instanceof Tree) {
+                        if (Util.checkCollision(g, this.monkey)) {
+                            this.monkey.sendMessage();
                         }
                     }
-                    if (g instanceof Banana) {
-                        if (Util.checkCollision(g, this.monkey)) {
-                            g.resetBanana();
-                            this.scorePoint();
+                }
+                for (var _b = 0, _c = this.specialitems; _b < _c.length; _b++) {
+                    var s = _c[_b];
+                    s.update();
+                }
+                if (this.hitGuard) {
+                    for (var _d = 0, _e = this.gameobjects; _d < _e.length; _d++) {
+                        var g = _e[_d];
+                        if (g instanceof Guard) {
+                            g.reset();
                         }
                     }
                 }
@@ -153,14 +198,26 @@ var Guard = (function (_super) {
         _this.x = Math.floor(Math.random() * (window.innerWidth - _this.width));
         _this.y = Math.floor(Math.random() * (window.innerHeight / 2) + (window.innerHeight / 2 - _this.height));
         _this.speedmultiplier = 5;
-        console.log("police created");
         _this.monkey = monkey;
+        _this.relScore = Game.getInstance().score;
+        _this.monkey.subscribe(_this);
         _this.behaviour = new Watching(_this, _this.monkey);
         return _this;
     }
+    Guard.prototype.notify = function () {
+        clearInterval(this.interval);
+        Game.getInstance().relScore = 0;
+        this.interval = setInterval(function () {
+            Game.getInstance().relScore = Game.getInstance().score;
+        }, 100);
+    };
     Guard.prototype.update = function () {
-        var score = Game.getInstance().score;
+        this.relScore = Game.getInstance().relScore;
+        var score = this.relScore;
         switch (true) {
+            case (score == 0):
+                this.behaviour = new Watching(this, this.monkey);
+                break;
             case (score < 2):
                 if (Util.checkInRatio(this, this.monkey, 200)) {
                     this.behaviour = new Patrolling(this, this.monkey);
@@ -172,17 +229,13 @@ var Guard = (function (_super) {
             case (Math.floor(this.monkey.x) <= 0 || Math.floor(this.monkey.x) >= Math.floor(Game.getInstance().maxWidth - this.monkey.width) || Math.floor(this.monkey.y) <= 0 || Math.floor(this.monkey.y) >= Math.floor(Game.getInstance().maxHeight - this.monkey.height)):
                 this.behaviour = new Walking(this, this.monkey);
                 break;
-            case (score >= 2 && score < 10):
+            case (score >= 2):
                 if (Util.checkInRatio(this, this.monkey, 200)) {
                     this.behaviour = new Patrolling(this, this.monkey);
                 }
                 else {
                     this.behaviour = new Walking(this, this.monkey);
                 }
-                break;
-            case (score >= 10):
-                console.log('1 angry man');
-                this.behaviour = new Shooting(this, this.monkey);
                 break;
         }
         if (Math.floor(this.x) <= 0 || Math.floor(this.x) >= Math.floor(Game.getInstance().maxWidth - this.width)) {
@@ -228,9 +281,9 @@ var Guard = (function (_super) {
         this.y += this.yspeed;
         _super.prototype.update.call(this);
     };
-    Guard.prototype.resetPosition = function () {
+    Guard.prototype.reset = function () {
         this.x = Math.floor(Math.random() * (window.innerWidth - this.width));
-        this.y = Math.floor(Math.random() * (window.innerHeight / 2) + (window.innerHeight / 2 - this.height));
+        this.y = Math.floor(Math.random() * (-150)) + (window.innerHeight - this.height);
     };
     return Guard;
 }(GameObject));
@@ -238,6 +291,7 @@ var Monkey = (function (_super) {
     __extends(Monkey, _super);
     function Monkey(parent) {
         var _this = _super.call(this, "monkey", parent) || this;
+        _this.observers = [];
         _this.speedLeft = 0;
         _this.speedRight = 0;
         _this.speedUp = 0;
@@ -246,11 +300,25 @@ var Monkey = (function (_super) {
         _this.height = 40;
         _this.x = 20;
         _this.y = 20;
-        console.log("boat created");
         window.addEventListener("keydown", function (e) { return _this.onKeyDown(e); });
         window.addEventListener("keyup", function (e) { return _this.onKeyUp(e); });
         return _this;
     }
+    Monkey.prototype.subscribe = function (o) {
+        this.observers.push(o);
+    };
+    Monkey.prototype.unsubscribe = function (o) {
+        var indexOfO = this.observers.indexOf(o);
+        if (indexOfO > -1) {
+            this.observers.splice(indexOfO, 1);
+        }
+    };
+    Monkey.prototype.sendMessage = function () {
+        for (var _i = 0, _a = this.observers; _i < _a.length; _i++) {
+            var c = _a[_i];
+            c.notify();
+        }
+    };
     Monkey.prototype.onKeyDown = function (event) {
         switch (event.key) {
             case "ArrowUp":
@@ -334,12 +402,45 @@ var Monkey = (function (_super) {
     };
     return Monkey;
 }(GameObject));
+var PotionScoreDown = (function (_super) {
+    __extends(PotionScoreDown, _super);
+    function PotionScoreDown(parent) {
+        var _this = _super.call(this, "potionminus", parent) || this;
+        _this.width = 15;
+        _this.height = 22;
+        _this.x = Math.random() * (window.innerWidth - _this.width);
+        _this.y = Math.random() * (window.innerHeight - _this.height);
+        return _this;
+    }
+    PotionScoreDown.prototype.collided = function () {
+        Game.getInstance().score--;
+        Game.getInstance().relScore--;
+        Game.getInstance().uiScore.innerHTML = "Score: " + Game.getInstance().score;
+        Game.getInstance().blehSound.play();
+        _super.prototype.reset.call(this);
+    };
+    PotionScoreDown.prototype.update = function () {
+        _super.prototype.update.call(this);
+    };
+    return PotionScoreDown;
+}(SpecialItems));
+var Sound = (function () {
+    function Sound(source) {
+        this.element = new Audio();
+        this.element = document.createElement("audio");
+        this.element.src = source;
+    }
+    Sound.prototype.play = function () {
+        this.element.play();
+    };
+    return Sound;
+}());
 var Tree = (function (_super) {
     __extends(Tree, _super);
     function Tree(parent) {
         var _this = _super.call(this, "tree", parent) || this;
-        _this.width = 75;
-        _this.height = 75;
+        _this.width = 70;
+        _this.height = 70;
         _this.x = Math.random() * (window.innerWidth - _this.width);
         _this.y = Math.random() * (window.innerHeight - _this.height);
         return _this;
@@ -379,25 +480,19 @@ var Patrolling = (function () {
         this.self = guard;
     }
     Patrolling.prototype.performBehaviour = function () {
+        if (Game.getInstance().relScore > 10) {
+            this.self.speedmultiplier = 6;
+        }
         console.log("patrolling");
         Util.setSpeed(this.self, this.monkey.x - this.self.x, this.monkey.y - this.self.y);
     };
     return Patrolling;
 }());
-var Shooting = (function () {
-    function Shooting(guard, monkey) {
-        this.monkey = monkey;
-        this.self = guard;
-    }
-    Shooting.prototype.performBehaviour = function () {
-        console.log("shooting");
-    };
-    return Shooting;
-}());
 var Walking = (function () {
     function Walking(guard, monkey) {
         this.monkey = monkey;
         this.self = guard;
+        this.self.speedmultiplier = 5;
     }
     Walking.prototype.performBehaviour = function () {
         if (this.self.xspeed === 0 || this.self.yspeed === 0) {
@@ -415,7 +510,6 @@ var Watching = (function () {
         this.self = guard;
     }
     Watching.prototype.performBehaviour = function () {
-        console.log('watching');
         this.self.xspeed = 0;
         this.self.yspeed = 0;
     };
