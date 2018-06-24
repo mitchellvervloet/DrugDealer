@@ -93,14 +93,14 @@ var Game = (function () {
         this.pausedTextElement = document.querySelector('.pause');
         var parent = document.getElementById("container");
         this.monkey = new Monkey(parent);
-        for (var g = 0; g < 5; g++) {
+        for (var g = 0; g < 10; g++) {
             this.gameobjects.push(new Guard(parent, this.monkey));
         }
         this.gameobjects.push(new Tree(parent));
-        for (var b = 0; b < 5; b++) {
+        for (var b = 0; b < 8; b++) {
             this.specialitems.push(new Banana(parent));
         }
-        for (var p = 0; p < 3; p++) {
+        for (var p = 0; p < 5; p++) {
             this.specialitems.push(new PotionScoreDown(parent));
         }
         var newGame = document.querySelector(".restart");

@@ -54,14 +54,14 @@ class Game {
 
         let parent = document.getElementById("container")!
         this.monkey = new Monkey(parent)
-        for(let g = 0; g<5; g++) {
+        for(let g = 0; g<10; g++) {
             this.gameobjects.push(new Guard(parent, this.monkey))
         }
         this.gameobjects.push(new Tree(parent))
-        for(let b = 0; b<5; b++) {
+        for(let b = 0; b<8; b++) {
             this.specialitems.push(new Banana(parent))
         }
-        for(let p = 0; p<3; p++) {
+        for(let p = 0; p<5; p++) {
             this.specialitems.push(new PotionScoreDown(parent))
         }
 
