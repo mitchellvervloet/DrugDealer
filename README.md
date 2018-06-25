@@ -1,4 +1,4 @@
-# DrugDealer - Mitchell Vervloet
+# MonkeyChase - Mitchell Vervloet (naam was eerst DrugDealer)
 Deze game is ontwikkeld voor de herkansing van het vak Applying Design Patterns in Game Development.
 @Copyright - Mitchell Vervloet
 
@@ -7,7 +7,7 @@ Deze game is een game waarbij de gebruiker met zijn pijltjestoetsen de aap moet 
 
 ## Speelbare game
 
-Link naar de online speelbare game
+Link naar de online speelbare game: https://mitchellvervloet.github.io/DrugDealer/
 
 ## Installatie
 
@@ -263,4 +263,5 @@ class Sound {
 ```
 
 ### Game component 2
+nvt helaas
 
