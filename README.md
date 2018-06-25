@@ -15,7 +15,7 @@ Om dit project te clonen, editen en runnen zijn geen speciale handelingen nodig.
 
 ## Klassendiagram
 
-Het klassendiagram van je game.
+![Klik voor UML](https://github.com/mitchellvervloet/DrugDealer/blob/master/docs/img/uml.png)
 
 ## Pull request
 
