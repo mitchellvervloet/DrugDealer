@@ -57,92 +57,37 @@ window.addEventListener('load', () => {
 
 ## Polymorfisme
 
-### nummer 1
-Het Polymorfisme heb ik teruggevonden in de vorm van een GameObject die ge-extend wordt door alle objecten die getekend moeten worden in de Game. In het gameobject wordt de meegegeven 'tag' in de 'parent' gestopt voor elk object die hem extend. Elk object moet ook getekend worden dus dit is erg handig. Daarnaast wordt het object ook echt getekend door middel van de update. De class GameObject ziet er als volgt uit:
+### Overerving - nummer 1
+Overerving wordt toegepast in de vorm van een GameObject die ge-extend wordt door alle objecten die getekend moeten worden in de Game. Elk object moet ook getekend worden dus dit is erg handig. Naast dat het GameObject bepaald welke methods er moeten zitten in de classes die extenden, kan elke class een eigen definitie in de methods zetten. Het is erg handig als bepaalde classes van een zelfde class extenden, omdat je ze dan allemaal in 1 keer kan aanroepen. Dit heb ik gedaan door alle gameobjecten in een array te zetten en ze daarna met een for aan te roepen. Dit is hieronder te zien:
 ```
-class GameObject {
-
-    class GameObject {
-    
-    public div: HTMLElement
-    public x:number = 0
-    public y:number = 0
-    public width:number
-    public height:number
-    public xspeed:number = 0
-    public yspeed:number = 0
-    public speedmultiplier:number = 1
-    
-    constructor(tag:string, parent:HTMLElement) {
-        this.div = document.createElement(tag)
-        parent.appendChild(this.div)
-    }
-
-    public update():void {
-        this.div.style.transform = "translate("+this.x+"px, "+this.y+"px)"
-    }
-}
-
-}
+for(let g of this.gameobjects){
+                    g.update()
 ```
 
-Er is te zien dat er een aantal standaard properties zijn die meegegeven worden. Per object kan er dan bepaald worden wat de waardes zullen zijn, maar er staat vast in het GameObject dat de objecten die dit extenden, dit moeten bevatten.
-
-Een voorbeeld van een Object die GameObject extend is 'Monkey':
-`class Monkey extends GameObject implements Subject`
-
-De properties die het object moeten bezitten, worden in de class toegekend. Met behulp van de super() aan te roepen kan de 'tag' en de 'parent' meegegeven worden. 
-`super("monkey", parent)`
-
-In de update functie moet ook de update functie van de super aangeroepen worden:
-`super.update()`
-
-### nummer 2
-Het Polymorfisme heb ik in nummer 2 teruggevonden in de vorm van een specialItem die ge-extend wordt door alle objecten die een speciale functie hebben als een 'powerup' of een 'powerdown'. Omdat het special item ook weer gameobject extend moet er aan de super van specialItem de gewenste gegevens meeggegeven worden die de super van Gameobject nodig heeft. Dit zijn dus ook de 'tag' en de 'parent'. De class GameObject ziet er als volgt uit:
+### Overerving - nummer 2
+Overerving wordt in voorbeeld 2 toegepast in de vorm van een specialItem die ge-extend wordt door alle objecten die een speciale functie hebben als een 'powerup' of een 'powerdown'. Op deze manier kan je elke class duidelijk maken dat ze een method moeten bezitten die de special method uitvoeren. Ook in dit geval kunnen alle special items in 1 keer aangeroepen worden als ze in 1 array gezet worden. Daar heb ik hier ook voor gekozen. Ik kan zo gemakkelijk op elke collision van een special items met de Monkey dezelfde class aanroepen. Dit is hieronder te zien. 
 ```
-class SpecialItems extends GameObject {
-
-    constructor(element:string, parent:HTMLElement) {
-        super(element, parent);
-    }
-
-    reset() {
-        this.x = Math.random() * (window.innerWidth - this.width)
-        this.y = Math.random() * (window.innerHeight-this.height)
-    }
-
-    //If collided with monkey then call reset method for all extenders
-    collided() { 
-        this.reset()
-    }
-
-    update() {
-        //check if collided with monkey
-        if(Util.checkCollision(this, Game.getInstance().monkey) ){
-            this.collided()
-        }
-        super.update()
-    }
-
-}
+for(let s of this.specialitems){
+                    s.update()
+                }
 ```
 
-De belangrijkste functie van deze polymorfisme, is het makkelijk maken van het koppelen van een powerup aan de collision met de monkey. Voor de toekomst kunnen er op deze manier gemakkelijk nog meerdere items toegevoegd worden!
+Zoals te zien is, wordt voor elk special item de update functie aangeroepen. De inhoud van deze functie zal voor elke class verschillen.
 
-Een voorbeeld van een Object die SpecialItems extend is 'Banana':
-`class Banana extends SpecialItems`
+### Type guards
+Een ander onderdeel van Polymorfisme is Type Guards. Ik heb gebruik gemaakt van de Type Guards om te checken of het object, uit de array gameobjecten, waarmee de Monkey collide van een bepaald type is. Ik het geval hieronder kijk ik of het type van de class Tree is.
+```
+if(g instanceof Tree) {
 
-Hier zie je de collided functie die voor elke object anders kan zijn:
+                        //OBSERVER --> if the monkey collides with tree then send message
+                        if(Util.checkCollision(g, this.monkey) ){
+                            this.monkey.sendMessage()
+                        }
+
+                    }
 ```
-//If collided with monkey then this happens
-  collided() {
-      Game.getInstance().score++
-      Game.getInstance().relScore++
-      Game.getInstance().uiScore.innerHTML = "Score: " + Game.getInstance().score
-      Game.getInstance().nomnomnomSound.play()
-      super.reset()
-  }
-```
+
+Zoals je kan zien kan ik een method aanroepen die alleen voor een bepaalde class uitgevoerd hoeft te worden.
 
 ## Strategy
 
