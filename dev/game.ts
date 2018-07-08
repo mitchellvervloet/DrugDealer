@@ -36,7 +36,8 @@ class Game {
     public loseLiveSound = new Sound('sounds/loselive.wav');
     public blehSound = new Sound('sounds/bleh.mp3');
 
-    constructor () {
+    //Private constructor voor singleton pattern
+    private constructor () {
 
         this.minWidth = 0
         this.maxWidth = window.innerWidth
